@@ -1,4 +1,4 @@
-public with sharing class CalendarController {
+public without sharing class CalendarController {
     // Constants for object type names
     private static final String OBJECT_TYPE_SERVICE_APPOINTMENT = 'ServiceAppointment';
     private static final String OBJECT_TYPE_RESOURCE_ABSENCE = 'ResourceAbsence';
@@ -457,29 +457,6 @@ public with sharing class CalendarController {
         } catch (Exception e) {
             throw new AuraHandledException('Error fetching event detail: ' + e.getMessage());
         }
-    }
-
-    @AuraEnabled(cacheable=true scope = 'global')
-    public static EmailMessage getEmailDetail(String recordId) {
-        if (String.isBlank(recordId)) {
-            return null;
-        }
-
-        List<EmailMessage> emails = [
-            SELECT Id, Name, ActivityId, AttachmentIds, AutomationType, BccAddress,
-                Case_Communication_Status__c, Case_Status__c, CcAddress, ClientThreadIdentifier, CreatedById, CreatedDate,
-                CS_Case_Status__c, Einstein_Email_Summary__c, Email_Message_Process__c, EmailRoutingAddressId,
-                EmailTemplateId, FirstOpenedDate, FromAddress, FromId, FromName, HasAttachment, Headers,
-                HtmlBody, Incoming, IsBounced, IsClientManaged, IsDeleted, IsExternallyVisible, IsOpened,
-                IsTracked, LastModifiedById, LastModifiedDate, LastOpenedDate, MessageDate,
-                MessageIdentifier, ParentId, RelatedToId, ReplyToEmailMessageId, Source, Status, Subject,
-                SystemModstamp, TextBody, ThreadIdentifier, ToAddress, ValidatedFromAddress
-            FROM EmailMessage
-            WHERE Id = :recordId
-            LIMIT 1
-        ];
-
-        return emails.isEmpty() ? null : emails[0];
     }
 
     // Get event indicators for year view (returns dates with events)

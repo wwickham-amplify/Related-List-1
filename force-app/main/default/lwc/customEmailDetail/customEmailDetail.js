@@ -1,5 +1,5 @@
 import { LightningElement, api, wire } from 'lwc';
-import getEmailDetail from '@salesforce/apex/CalendarController.getEmailDetail';
+import getEmailDetail from '@salesforce/apex/RelatedListLWRController.getEmailDetail';
 
 export default class CustomEmailDetail extends LightningElement {
     @api recordId;

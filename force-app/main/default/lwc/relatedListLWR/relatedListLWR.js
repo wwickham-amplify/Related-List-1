@@ -140,7 +140,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
     
     debugLog(message, ...args) {
         if (this.showDebugInfo) {
-            console.log(`[Related List LWR Debug] ${message}`, ...args);
+            //console.log(`[Related List LWR Debug] ${message}`, ...args);
         }
     }
 
@@ -188,7 +188,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
             configuredRecordId.trim() !== '' &&
             configuredRecordId !== '{!recordId}' && 
             configuredRecordId !== 'undefined') {
-            this.debugLog('Using configured record ID:', configuredRecordId);
+            //console.log('Using configured record ID:', configuredRecordId);
             return configuredRecordId;
         }
         
@@ -197,11 +197,11 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
             this.recordId !== '{!recordId}' && 
             this.recordId !== 'undefined' && 
             this.recordId.trim() !== '') {
-            this.debugLog('Using Experience Cloud record ID:', this.recordId);
+            //console.log('Using Experience Cloud record ID:', this.recordId);
             return this.recordId;
         }
         
-        this.debugLog('No valid record ID available');
+        //console.log('No valid record ID available');
         return null;
     }
 
@@ -445,7 +445,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
     }
 
     get isEmailType() {
-        console.log('relatedlisttype: ' + this.relatedListType);
+        //console.log('relatedlisttype: ' + this.relatedListType);
         return this.relatedListType === 'emails';
     }
 
@@ -623,7 +623,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
     }
     
     get showEmptyState() {
-        //console.log('loading ' + this.isLoading + ' error ' + this.error + ' has data ' + this.hasData);
+        ////console.log('loading ' + this.isLoading + ' error ' + this.error + ' has data ' + this.hasData);
         return !this.isLoading && !this.error && !this.hasData;
     }
     
@@ -632,7 +632,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
     }
 
     get showTable() {
-        //console.log('display mode: ' + this.displayMode);
+        ////console.log('display mode: ' + this.displayMode);
         return ((this.displayMode === 'table' && this.isStandardType) || 
                 this.isArticlesType || this.isEmailType) &&  // Removed Files reference
             !this.isLoading && 
@@ -918,7 +918,7 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
             } else if (this.isFilesType) {
                 await this.loadFiles();
             } else if (this.isEmailType) {
-                await this.loadRelatedActivity('08pEi000001JIofIAG');
+                await this.loadRelatedActivity();
             } else {
                 await this.loadDataWithARL();
             }
@@ -981,16 +981,16 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
         });
     }
 
-    async loadRelatedActivity(recordId) {
-        if (!recordId) {
-            //console.log('oh no fail' + recordId);
+    async loadRelatedActivity() {
+        if (!this.currentRecordId) {
+            ////console.log('oh no fail' + recordId);
             this.showToast('Error', 'No record ID provided', 'error');
             return;
         }
 
         try {
             this.currentOffset = 0;
-            const response = await getActivity({ recordId: recordId });
+            const response = await getActivity({ recordId: this.currentRecordId });
 
             let modifiedResponse = [...response];
             modifiedResponse.forEach(rec => {
@@ -1004,8 +1004,8 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
                 }
             });
 
-            //console.log('126467: ');
-            //console.log(modifiedResponse);
+            ////console.log('126467: ');
+            ////console.log(modifiedResponse);
 
             this.columns = [
                 {
@@ -1674,64 +1674,64 @@ export default class SlotTest extends NavigationMixin(LightningElement) {
     logPerformanceMetrics(label) {
         if (!this.showDebugInfo) return;
 
-        console.log(`\n========== PERFORMANCE METRICS ${label} ==========`);
+        //console.log(`\n========== PERFORMANCE METRICS ${label} ==========`);
 
-        console.log(`\n📊 BATCH 1 - Optimizations Applied:`);
-        console.log(`✓ FIX #6: Cached relatedListLabel getter`);
-        console.log(`  - Label accesses: ${this._perfMetrics.relatedListLabelAccessCount}`);
-        console.log(`  - Cache hits: ${this._perfMetrics.relatedListLabelCacheHits}`);
+        //console.log(`\n📊 BATCH 1 - Optimizations Applied:`);
+        //console.log(`✓ FIX #6: Cached relatedListLabel getter`);
+        //console.log(`  - Label accesses: ${this._perfMetrics.relatedListLabelAccessCount}`);
+        //console.log(`  - Cache hits: ${this._perfMetrics.relatedListLabelCacheHits}`);
         const labelHitRate = this._perfMetrics.relatedListLabelAccessCount > 0
             ? ((this._perfMetrics.relatedListLabelCacheHits / this._perfMetrics.relatedListLabelAccessCount) * 100).toFixed(1)
             : '0.0';
-        console.log(`  - Cache hit rate: ${labelHitRate}%`);
+        //console.log(`  - Cache hit rate: ${labelHitRate}%`);
 
-        console.log(`\n✓ FIX #7: Cached customFieldNamesList`);
-        console.log(`  - List accesses: ${this._perfMetrics.customFieldNamesListAccessCount}`);
-        console.log(`  - Cache hits: ${this._perfMetrics.customFieldNamesListCacheHits}`);
+        //console.log(`\n✓ FIX #7: Cached customFieldNamesList`);
+        //console.log(`  - List accesses: ${this._perfMetrics.customFieldNamesListAccessCount}`);
+        //console.log(`  - Cache hits: ${this._perfMetrics.customFieldNamesListCacheHits}`);
         const listHitRate = this._perfMetrics.customFieldNamesListAccessCount > 0
             ? ((this._perfMetrics.customFieldNamesListCacheHits / this._perfMetrics.customFieldNamesListAccessCount) * 100).toFixed(1)
             : '0.0';
-        console.log(`  - Cache hit rate: ${listHitRate}%`);
+        //console.log(`  - Cache hit rate: ${listHitRate}%`);
 
-        console.log(`\n✓ FIX #8: Optimized sorting algorithm`);
-        console.log(`  - Sort operations: ${this._perfMetrics.sortOperationCount}`);
-        console.log(`  - Value extractions saved: ${this._perfMetrics.sortOptimizationSavings}`);
+        //console.log(`\n✓ FIX #8: Optimized sorting algorithm`);
+        //console.log(`  - Sort operations: ${this._perfMetrics.sortOperationCount}`);
+        //console.log(`  - Value extractions saved: ${this._perfMetrics.sortOptimizationSavings}`);
 
-        console.log(`\n📋 BATCH 2 - Additional Optimizations:`);
-        console.log(`✓ FIX #9: Cached config-only getters`);
-        console.log(`  - Getter accesses: ${this._perfMetrics.configGetterAccessCount}`);
-        console.log(`  - Cache hits: ${this._perfMetrics.configGetterCacheHits}`);
+        //console.log(`\n📋 BATCH 2 - Additional Optimizations:`);
+        //console.log(`✓ FIX #9: Cached config-only getters`);
+        //console.log(`  - Getter accesses: ${this._perfMetrics.configGetterAccessCount}`);
+        //console.log(`  - Cache hits: ${this._perfMetrics.configGetterCacheHits}`);
         const configHitRate = this._perfMetrics.configGetterAccessCount > 0
             ? ((this._perfMetrics.configGetterCacheHits / this._perfMetrics.configGetterAccessCount) * 100).toFixed(1)
             : '0.0';
-        console.log(`  - Cache hit rate: ${configHitRate}%`);
+        //console.log(`  - Cache hit rate: ${configHitRate}%`);
 
-        console.log(`\n🔍 FIX #10 BASELINE: ARL field flattening`);
-        console.log(`  - Flatten calls: ${this._perfMetrics.flattenARLCallCount}`);
-        console.log(`  - Fields processed: ${this._perfMetrics.flattenARLFieldsProcessed}`);
+        //console.log(`\n🔍 FIX #10 BASELINE: ARL field flattening`);
+        //console.log(`  - Flatten calls: ${this._perfMetrics.flattenARLCallCount}`);
+        //console.log(`  - Fields processed: ${this._perfMetrics.flattenARLFieldsProcessed}`);
         const avgFieldsPerCall = this._perfMetrics.flattenARLCallCount > 0
             ? (this._perfMetrics.flattenARLFieldsProcessed / this._perfMetrics.flattenARLCallCount).toFixed(1)
             : '0';
-        console.log(`  - Avg fields per call: ${avgFieldsPerCall}`);
-        console.log(`  - Opportunity: Cache field mapping logic`);
+        //console.log(`  - Avg fields per call: ${avgFieldsPerCall}`);
+        //console.log(`  - Opportunity: Cache field mapping logic`);
 
-        console.log(`\n🔍 FIX #11 BASELINE: Infinite scroll triggers`);
-        console.log(`  - Scroll handler triggers: ${this._perfMetrics.infiniteScrollTriggerCount}`);
-        console.log(`  - Opportunity: Debounce to reduce redundant calls`);
+        //console.log(`\n🔍 FIX #11 BASELINE: Infinite scroll triggers`);
+        //console.log(`  - Scroll handler triggers: ${this._perfMetrics.infiniteScrollTriggerCount}`);
+        //console.log(`  - Opportunity: Debounce to reduce redundant calls`);
 
-        console.log(`\n🔍 FIX #12 BASELINE: Card data generation`);
-        console.log(`  - Card data generated: ${this._perfMetrics.cardDataGenerationCount}`);
-        console.log(`  - Wasted (not in cards mode): ${this._perfMetrics.cardDataWastedCount}`);
+        //console.log(`\n🔍 FIX #12 BASELINE: Card data generation`);
+        //console.log(`  - Card data generated: ${this._perfMetrics.cardDataGenerationCount}`);
+        //console.log(`  - Wasted (not in cards mode): ${this._perfMetrics.cardDataWastedCount}`);
         const wasteRate = this._perfMetrics.cardDataGenerationCount > 0
             ? ((this._perfMetrics.cardDataWastedCount / this._perfMetrics.cardDataGenerationCount) * 100).toFixed(1)
             : '0.0';
-        console.log(`  - Waste rate: ${wasteRate}%`);
-        console.log(`  - Opportunity: Only generate when displayMode === 'cards'`);
+        //console.log(`  - Waste rate: ${wasteRate}%`);
+        //console.log(`  - Opportunity: Only generate when displayMode === 'cards'`);
 
-        console.log(`\n🎯 General Metrics:`);
-        console.log(`  - renderedCallback calls: ${this._perfMetrics.renderCallbackCount}`);
-        console.log(`  - Last render time: ${this._perfMetrics.lastRenderTime.toFixed(2)}ms`);
-        console.log(`================================================\n`);
+        //console.log(`\n🎯 General Metrics:`);
+        //console.log(`  - renderedCallback calls: ${this._perfMetrics.renderCallbackCount}`);
+        //console.log(`  - Last render time: ${this._perfMetrics.lastRenderTime.toFixed(2)}ms`);
+        //console.log(`================================================\n`);
     }
     
     async handleViewMore() {
